@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>결과</title>
+    <script src="export.js"></script>
+</head>
+<body>
+    <button id="csvDownloadButton">CSV 다운로드 받기</button>
+    <table id="mytable" border="3">     
+        <tr>
+            <th>NAME</th>
+            <th>PRICE</th>       
+            <% for(var i=0; i<data.length; i++){ %>
+                <tr>
+                    <td><%= data[i].name %> </td>   
+                    <td><%= data[i].price %> </td>                                                      
+                    <p></p>
+                </tr>
+            <% } %>
+        </tr>
+    </table>    
+</body>
+
+
+
+
+<script type="text/javascript">
+    class ToCSV {
+        constructor() {    
+        document.querySelector('#csvDownloadButton').addEventListener('click', e => {
+            e.preventDefault()
+            this.getCSV('mycsv.csv')
+        })
+    }
+        downloadCSV(csv, filename) {
+        let csvFile;
+        let downloadLink;
+        
+        const BOM = "\uFEFF";
+        csv = BOM + csv
+       
+        csvFile = new Blob([csv], {type: "text/csv"})    
+        downloadLink = document.createElement("a")       
+        downloadLink.download = filename;      
+        downloadLink.href = window.URL.createObjectURL(csvFile)       
+        downloadLink.style.display = "none"      
+        document.body.appendChild(downloadLink)     
+        downloadLink.click()
+    }
+        getCSV(filename) {         
+            const csv = []
+            const rows = document.querySelectorAll("#mytable tr")
+            for (let i = 0; i < rows.length; i++) {
+                const row = [], cols = rows[i].querySelectorAll("th, td")
+                for (let j = 0; j < cols.length; j++)
+                    row.push(cols[j].innerText)
+                csv.push(row.join())
+            }          
+            this.downloadCSV(csv.join("\n"), filename)            
+        }
+    }
+    document.addEventListener('DOMContentLoaded', e => {
+        new ToCSV()
+})
+</script>
+
+
+
+</html>
+
