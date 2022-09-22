@@ -1,0 +1,42 @@
+*{
+    margin: auto;
+}
+form{
+    text-align: center;
+}
+#write_title {
+    text-align: center;
+    width: 50px;
+    color: aqua;
+    background-color: green;
+   }
+h2{
+    text-align: center;
+    width: 130px;
+    color: rgb(250, 246, 11);
+    background-color: rgb(0, 19, 128);
+}
+table{
+    text-align: center;
+    border: solid 2px red;
+}
+.n{
+    width: 45px;
+    border: solid 2px green;
+}
+.m{
+    text-align: left;
+    width: 300px;
+    border: solid 2px rgb(96, 201, 96);
+}
+.col1{
+    width: 45px;
+    border: solid 2px rgb(236, 12, 217);
+}
+.col2{
+    width: 200px;
+    border: solid 2px rgb(102, 4, 94);
+}
+.col3{
+    border: solid 2px rgb(146, 116, 144);
+}
