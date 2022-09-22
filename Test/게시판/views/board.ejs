@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/style1.css">
+</head>
+<body>
+    <form action="/result" method="get">
+        <h2 id ="board_title">자유 게시판</h2>
+        <div id="write_title"><h2>글쓰기</h2></div>
+        <table>
+            <tr id="name">
+                <td class="col1">이름</td>
+                <td class="col2"><input type="text" name="name"></td>
+            </tr>
+            <tr id="subject">
+                <td class="col1">제목</td>
+                <td class="col2"><input type="text" name="title"></td>
+            </tr>
+            <tr id="content">
+                <td class="col1">내용</td>
+                <td class="col2"><textarea name="content"></textarea></td>
+            </tr>
+            <tr id="upload">
+                <td class="col1">업로드 파일</td>
+                <td class="col2"><input type="text"><input type="file"></td>
+            </tr>
+        </table>
+        <div id="button">
+            <a href="#" type="submit"><img src="/img/ok.png"></a>
+            <a href="../views/board_result.ejs"><img src="/img/list.png"></a>
+        </div>
+    </form>
+</body>
+</html>
