@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>방구 방가</title>
+    <script src="export.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+        .table_all {
+            background-size: contain;
+            background-position: right;    
+        }
+        .bang_main {
+            background-color:transparent;
+            padding: 20px 20px 20px 40px;
+            color: white;
+        }
+
+        .table {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            margin: 0px auto 0px auto;
+            padding: 20px;
+            border-radius: 20px;
+            
+        }
+    </style>
+
+</head>
+<body>
+    <div class="table_all">
+        <div class="bang_main">
+            <!-- <form method="get">
+                <input class="btn" style="font-size: 30px;" TYPE="submit" onclick="javascript: form.action='/' " VALUE="Home">
+            </form>  -->
+            <!-- <a href="http://localhost:3000/?"><i class="bi bi-house fs-1" style="color: black; padding: 20px;"></i></a> -->
+            <a href="javascript:history.back();"><i class="bi bi-box-arrow-in-left fs-1" style="color: black; padding: 20px;"></i></a>
+        </div>
+        
+        <div class="table">
+            <form method="post">
+                <button id="btnExportToCsv" class="btn btn-success btn-lg" id="btnExportToCsv" type="button">파일 다운로드</button>                
+                <input class="btn btn-warning btn-lg" TYPE="submit" onclick="javascript: form.action='/chart' " VALUE="차트">                 
+            </form>
+            <p></p>
+            <div>
+                <table id="dataTable" class="table table-striped" style="font-size: 18px;" border="2">
+                    <tr>
+                        <th style="font-size: 20px;">위치</th>
+                        <th style="font-size: 20px;">보증금/월세</th>
+                        <th style="font-size: 20px;">면적/층</th> 
+                              
+                        <% for(var i=0; i<data.length; i++){ %>
+                            <tr>
+                                <td><%= data[i].location %> </td>
+                                <td><%= data[i].rent %> </td>   
+                                <td><%= data[i].area %> </td>  
+                            </tr>
+                        <% } %>
+                    </tr>
+                </table>    
+            </div>
+        </div>    
+    </div>
+    
+    
+</body>
+
+
+<script type="text/javascript">
+    const dataTable = document.getElementById("dataTable");
+    const btnExportToCsv = document.getElementById("btnExportToCsv");
+
+    btnExportToCsv.addEventListener("click", () => {
+
+        const exporter = new TableCSVExporter(dataTable);
+        const csvOutput = exporter.convertToCSV();
+        const BOM = '\uFEFF';
+        const csvBlob = new Blob([BOM + csvOutput], { type: 'text/csv;charset=utf-8' });
+        const blobUrl = URL.createObjectURL(csvBlob);
+        const anchorElement = document.createElement("a");
+
+        anchorElement.href = blobUrl;
+        anchorElement.download = "table-export.csv";
+        anchorElement.click();
+
+        setTimeout(() => {
+            URL.revokeObjectURL(blobUrl)
+        }, 500)
+    });
+    class TableCSVExporter {
+        constructor(table, includeHeaders = true) {
+            this.table = table;
+            this.rows = Array.from(table.querySelectorAll("tr"));
+
+            if (!includeHeaders && this.rows[0].querySelectorAll("th").length) {
+                this.rows.shift();
+            }
+        }
+
+        convertToCSV() {
+            const lines = [];
+            const numCols = this._findLongestRowLength();
+
+            for (const row of this.rows) {
+                let line = "";
+
+                for (let i = 0; i < numCols; i++) {
+                    if (row.children[i] !== undefined) {
+                        line += TableCSVExporter.parseCell(row.children[i]);
+                    }
+                    line += (i !== (numCols - 1)) ? "," : "";
+                }
+                lines.push(line);
+            }
+            return lines.join("\n");
+        }
+
+        _findLongestRowLength() {
+            return this.rows.reduce((l, row) => row.childElementCount > l ? row.childElementCount : l, 0);
+        }
+        static parseCell(tableCell) {
+            let parsedValue = tableCell.textContent;
+
+            parsedValue = parsedValue.replace(/"/g, `""`);
+
+            parsedValue = /[",\n]/.test(parsedValue) ? `"${parsedValue}"` : parsedValue;
+
+            return parsedValue;
+        }
+    }
+</script>
+
+
+
+</html>
+
